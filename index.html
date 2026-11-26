@@ -76,7 +76,7 @@ h2{font-size:clamp(26px,5vw,34px);line-height:1.1;margin:4px 0 8px}
 .ear:active{transform:translateY(3px);box-shadow:0 3px 0 var(--red2)}
 .opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .opt{background:var(--paper);border:3px solid var(--line);border-radius:20px;min-height:130px;font-size:clamp(64px,16vw,96px);line-height:1.1}
-.opt.w{font-size:clamp(34px,9vw,54px)}
+.opt.w{font-size:clamp(34px,9vw,54px)}.opt.p{font-size:clamp(24px,6.5vw,38px);min-height:90px;padding:8px}.opts.one{grid-template-columns:minmax(0,1fr)}.syl.word.p{font-size:clamp(38px,10vw,70px)}.chart.w.one{grid-template-columns:minmax(0,1fr)}.chart.w.one .cell .h{font-size:clamp(28px,7.5vw,44px)}
 .opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 18%,var(--paper))}
 .opt.wrong{border-color:var(--bad);animation:shake .4s}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
@@ -116,7 +116,7 @@ select,input[type=range]{width:100%;font:inherit;font-size:16px;min-height:44px;
     <button class="gear" id="gear" aria-label="Grown-up settings"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg></button>
   </div>
   <div class="hero" id="hero">
-    <div><h1>Earn your belts in reading</h1><p>Each belt is a group of nekudos. Get 18 of the last 20 right to earn it.</p><p style="font-size:13px;opacity:.75">Version 10</p></div>
+    <div><h1>Earn your belts in reading</h1><p>Each belt adds new nekudos in real words. Get 18 of the last 20 right to earn it.</p><p style="font-size:13px;opacity:.75">Version 11 · words</p></div>
     <div class="big heb" lang="he" aria-hidden="true">קְרִיאָה</div>
   </div>
 </header>
@@ -128,91 +128,82 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-/* ---------- letters (Sephardi vowels, Ashkenazi sav) ---------- */
-// id, display, sound key, transliteration, Hebrew TTS spelling, English TTS spelling, guttural, dagesh partner
-const L=[
-['alef','א','','','א','',1],['bet','בּ','b','b','בּ','b',0,'vet'],['vet','ב','v','v','ו','v',0,'bet'],
-['gimel','ג','g','g','ג','g'],['dalet','ד','d','d','ד','d'],['hei','ה','h','h','ה','h',1],['vav','ו','v','v','ו','v'],
-['zayin','ז','z','z','ז','z'],['chet','ח','ch','ch','ח','kh',1],['tet','ט','t','t','ט','t'],['yud','י','y','y','י','y'],
-['kaf','כּ','k','k','כּ','k',0,'chaf'],['chaf','כ','ch','ch','ח','kh',0,'kaf'],['lamed','ל','l','l','ל','l'],['mem','מ','m','m','מ','m'],
-['nun','נ','n','n','נ','n'],['samech','ס','s','s','ס','s'],['ayin','ע','','','ע','',1],['pei','פּ','p','p','פּ','p',0,'fei'],
-['fei','פ','f','f','פ','f',0,'pei'],['tzadi','צ','tz','tz','צ','ts'],['kuf','ק','k','k','ק','k'],['reish','ר','r','r','ר','r'],
-['shin','שׁ','sh','sh','שׁ','sh',0,'sin'],['sin','שׂ','s','s','ס','s',0,'shin'],['tav','תּ','t','t','תּ','t',0,'sav'],['sav','ת','s','s','ס','s',0,'tav']
-].map(a=>({id:a[0],ch:a[1],snd:a[2],tr:a[3],he:a[4],en:a[5],gut:!!a[6],pair:a[7]||null}));
-const LI=Object.fromEntries(L.map(x=>[x.id,x]));
-
-/* ---------- vowels ---------- */
-const V=[
-{id:'kamatz',m:'ָ',s:'a',n:'Kamatz'},{id:'patach',m:'ַ',s:'a',n:'Patach'},
-{id:'chirik',m:'ִ',s:'i',n:'Chirik'},{id:'chirikY',m:'ִ',t:'י',s:'i',n:'Chirik + yud'},
-{id:'segol',m:'ֶ',s:'e',n:'Segol'},{id:'tzeirei',m:'ֵ',s:'ei',n:'Tzeirei'},{id:'tzeireiY',m:'ֵ',t:'י',s:'ei',n:'Tzeirei + yud'},
-{id:'cholam',m:'ֹ',s:'o',n:'Cholam'},{id:'cholamV',m:'',t:'וֹ',s:'o',n:'Cholam male'},
-{id:'kubutz',m:'ֻ',s:'u',n:'Kubutz'},{id:'shuruk',m:'',t:'וּ',s:'u',n:'Shuruk'},
-{id:'sheva',m:'ְ',s:'e',n:'Sheva',quick:1,noGut:1},
-{id:'chatafP',m:'ֲ',s:'a',n:'Chataf patach',quick:1,gutOnly:1},{id:'chatafS',m:'ֱ',s:'e',n:'Chataf segol',quick:1,gutOnly:1},{id:'chatafK',m:'ֳ',s:'o',n:'Chataf kamatz',quick:1,gutOnly:1}
-];
-const VI=Object.fromEntries(V.map(x=>[x.id,x]));
-const TRV={ei:'ay',a:'ah',aw:'aw',i:'ee',e:'eh',o:'oh',u:'oo'};
-const VO={ei:'A',a:'ah',aw:'aw',i:'e',e:'eh',o:'oh',u:'oo'};
-const HEV={ei:'ֵי',aw:'וֹ',a:'ָא',i:'ִי',e:'ֶא',o:'וֹ',u:'וּ'};
-
-/* ---------- words (Black belt) ---------- */
-const W=[
-['שָׁלוֹם','shA-lohm','shA lome','👋','hello, peace'],['כֶּלֶב','keh-lev','keh lev','🐕','dog'],['דָּג','dAg','dAg','🐟','fish'],
-['יָד','yAd','yAd','✋','hand'],['סֵפֶר','say-fer','say fair','📖','book'],['בַּיִת','bah-yiS','bah yiS','🏠','house'],
-['יֶלֶד','yeh-led','yeh led','👦','boy'],['אַבָּא','ah-bA','ah bA','👨','Abba'],['אִמָּא','ee-mA','ee mA','👩','Ima'],
-['מַיִם','mah-yim','mah yeem','💧','water'],['לֶחֶם','leh-chem','leh khem','🍞','bread'],['שֶׁמֶשׁ','sheh-mesh','sheh mesh','☀️','sun'],
-['סוּס','soos','soose','🐴','horse'],['עֵץ','aytz','ayts','🌳','tree'],['פֶּרַח','peh-rach','peh rahkh','🌸','flower'],
-['חָלָב','chA-lAv','khA lAv','🥛','milk'],['גָּמָל','gA-mAl','gA mAl','🐫','camel'],['אֲרִי','ah-ree','ah ree','🦁','lion'],
-['כּוֹכָב','koh-chAv','koh khAv','⭐','star'],['שַׁבָּת','shah-bAS','shah bAS','🍷','Shabbos'],['נֵר','nayr','nair','🕯️','candle'],
-['תּוֹרָה','toh-rA','toe rA','📜','Torah'],['בְּרָכָה','b\'rA-chA','brA khA','🙏','bracha'],['סֻכָּה','soo-kA','soo kA','🛖','sukkah'],
-['מְנוֹרָה','m\'noh-rA','mnoh rA','🕎','menorah'],['כִּסֵּא','kee-say','kee say','🪑','chair'],['עוּגָה','oo-gA','oo gA','🎂','cake'],
-['דֻּבִּי','doo-bee','doo bee','🧸','teddy bear'],['רֶגֶל','reh-gel','reh gell','🦶','foot'],['אֹזֶן','oh-zen','oh zen','👂','ear'],
-['פִּיל','peel','peel','🐘','elephant'],['דְּבוֹרָה','d\'voh-rA','dvoh rA','🐝','bee'],['גֶּשֶׁם','geh-shem','geh shem','🌧️','rain'],
-['מוֹדֶה אֲנִי','moh-deh ah-nee','moh deh ah nee','🌅','Modeh Ani'],['שְׁמַע יִשְׂרָאֵל','sh\'mah yis-rA-ayl','shmah yiss rA ale','✨','Shema Yisrael'],['בָּרוּךְ אַתָּה','bA-rooch ah-tA','bA rookh ah tA','🙌','Baruch Atah']
+/* ---------- words by belt ----------
+   [Hebrew, sound-out, meaning, picture]
+   Sound-out tokens: A = kamatz (ah/aw), E = tzeirei (ay), S = tav without dagesh (s/t) */
+const WB=[
+/* white: kamatz + patach, 2 letters */
+[['דָּג','dAg','fish','🐟'],['יָד','yAd','hand','✋'],['גַּן','gahn','garden','🌷'],['חַם','chahm','hot','🔥'],['קַר','kahr','cold','🧊'],
+ ['שָׁם','shAm','there','👉'],['מָה','mA','what?','❓'],['פַּח','pahch','trash can','🗑️'],['כַּף','kahf','spoon','🥄'],['גַּג','gahg','roof','🏠'],
+ ['דַּף','dahf','page','📄'],['בַּת','bahS','daughter','👧'],['אַף','ahf','nose','👃'],['חַג','chahg','holiday','🎉'],['טַל','tahl','dew','💧'],
+ ['רַךְ','rahch','soft','☁️'],['בָּא','bA','comes','🚶'],['צַד','tzahd','side','↔️']],
+/* yellow: + chirik */
+[['מִי','mee','who?','🙋'],['פִּיל','peel','elephant','🐘'],['עִיר','eer','city','🏙️'],['שִׁיר','sheer','song','🎵'],['אִישׁ','eesh','man','👨'],
+ ['תִּיק','teek','bag','🎒'],['קִיר','keer','wall','🧱'],['גִּיר','geer','chalk','🖍️'],['הִיא','hee','she','👩'],['מַיִם','mah-yim','water','💧'],
+ ['בַּיִת','bah-yiS','house','🏠'],['יַיִן','yah-yin','wine','🍷'],['אִמָּא','ee-mA','Ima','👩'],['אַבָּא','ah-bA','Abba','👨'],['סַבָּא','sah-bA','Saba','👴'],
+ ['כִּתָּה','kee-tA','class','🏫'],['חִטָּה','chee-tA','wheat','🌾']],
+/* orange: + segol, tzeirei */
+[['כֶּלֶב','keh-lev','dog','🐕'],['יֶלֶד','yeh-led','boy','👦'],['לֶחֶם','leh-chem','bread','🍞'],['שֶׁמֶשׁ','sheh-mesh','sun','☀️'],['רֶגֶל','reh-gel','foot','🦶'],
+ ['גֶּשֶׁם','geh-shem','rain','🌧️'],['סֵפֶר','sE-fer','book','📖'],['עֵץ','Etz','tree','🌳'],['נֵר','nEr','candle','🕯️'],['שֵׁם','shEm','name','🏷️'],
+ ['לֵב','lEv','heart','❤️'],['אֵשׁ','Esh','fire','🔥'],['תֵּה','tE','tea','🍵'],['מֶלֶךְ','meh-lech','king','👑'],['דֶּרֶךְ','deh-rech','road','🛣️'],
+ ['כֶּסֶף','keh-sef','money','💰'],['חֶדֶר','cheh-der','room','🚪'],['פֶּרַח','peh-rach','flower','🌸'],['בֵּיצָה','bE-tzA','egg','🥚']],
+/* green: + cholam */
+[['שָׁלוֹם','shA-lohm','hello, peace','👋'],['יוֹם','yohm','day','📅'],['טוֹב','tohv','good','👍'],['קוֹל','kohl','voice','🗣️'],['חוֹל','chohl','sand','🏖️'],
+ ['סוֹד','sohd','secret','🤫'],['אוֹר','ohr','light','💡'],['לֹא','loh','no','❌'],['עוֹף','ohf','chicken','🐔'],['כּוֹכָב','koh-chAv','star','⭐'],
+ ['תּוֹרָה','toh-rA','Torah','📜'],['מוֹרֶה','moh-reh','teacher','🧑‍🏫'],['חֹרֶף','choh-ref','winter','❄️'],['אֹזֶן','oh-zen','ear','👂'],['בֹּקֶר','boh-ker','morning','🌅'],
+ ['שׁוֹפָר','shoh-fAr','shofar','📯'],['גּוֹזָל','goh-zAl','baby bird','🐣'],['כּוֹבַע','koh-vah','hat','🎩']],
+/* blue: + kubutz, shuruk */
+[['סוּס','soos','horse','🐴'],['שׁוּק','shook','market','🛒'],['חוּט','choot','string','🧵'],['תּוּת','tooS','strawberry','🍓'],['חוּם','choom','brown','🟤'],
+ ['רוּחַ','roo-ach','wind','🌬️'],['דֻּבִּי','doo-bee','teddy bear','🧸'],['עוּגָה','oo-gA','cake','🎂'],['סֻכָּה','soo-kA','sukkah','🛖'],['בּוּבָּה','boo-bA','doll','🪆'],
+ ['סֻלָּם','soo-lAm','ladder','🪜'],['כַּדּוּר','kah-door','ball','⚽'],['תַּפּוּחַ','tah-poo-ach','apple','🍎'],['מוּסִיקָה','moo-see-kA','music','🎶']],
+/* purple: + sheva, chataf */
+[['אֲנִי','ah-nee','I, me','🙋'],['אֲרִי','ah-ree','lion','🦁'],['חֲלוֹם','chah-lohm','dream','💭'],['אֱמֶת','eh-meS','truth','✅'],['אֳנִיָּה','oh-nee-yA','ship','🚢'],
+ ['זְבוּב','z\'voov','fly','🪰'],['גְּבִינָה','g\'vee-nA','cheese','🧀'],['בְּרָכָה','b\'rA-chA','bracha','🙏'],['מְנוֹרָה','m\'noh-rA','menorah','🕎'],['דְּבוֹרָה','d\'voh-rA','bee','🐝'],
+ ['יְלָדִים','y\'lA-deem','children','🧒'],['שְׁתַּיִם','sh\'tah-yim','two','2️⃣'],['עֲנָנִים','ah-nA-neem','clouds','☁️'],['אֲדָמָה','ah-dA-mA','earth','🌍'],
+ ['חֲנֻכָּה','chah-noo-kA','Chanukah','🕯️'],['סַבְתָּא','sahv-tA','Savta','👵'],['יַלְדָּה','yahl-dA','girl','👧'],['פַּרְפַּר','pahr-pahr','butterfly','🦋'],['שֻׁלְחָן','shool-chAn','table','🍽️']],
+/* brown: long words */
+[['תַּרְנְגוֹל','tahr-n\'gohl','rooster','🐓'],['מִכְתָּב','meech-tAv','letter','✉️'],['מַחְבֶּרֶת','mahch-beh-reS','notebook','📓'],['מִטְרִיָּה','meet-ree-yA','umbrella','☂️'],
+ ['פְּרָחִים','p\'rA-cheem','flowers','💐'],['כַּפְתּוֹר','kahf-tohr','button','🔘'],['שׁוֹקוֹלָד','shoh-koh-lAd','chocolate','🍫'],['תַּלְמִיד','tahl-meed','student','🧑‍🎓'],
+ ['מַתָּנָה','mah-tA-nA','gift','🎁'],['מִשְׁפָּחָה','meesh-pA-chA','family','👨‍👩‍👦'],['אַרְנָב','ahr-nAv','rabbit','🐇'],['צְפַרְדֵּעַ','tz\'fahr-dE-ah','frog','🐸'],
+ ['כִּסֵּא','kee-sE','chair','🪑'],['אוֹפַנַּיִם','oh-fah-nah-yim','bicycle','🚲'],['מְכוֹנִית','m\'choh-neeS','car','🚗'],['גְּלִידָה','g\'lee-dA','ice cream','🍦'],
+ ['עִפָּרוֹן','ee-pA-rohn','pencil','✏️'],['שַׁבָּת','shah-bAS','Shabbos','🍷'],['בֵּית כְּנֶסֶת','bES k\'neh-seS','shul','🕍']],
+/* black: siddur and brachos */
+[['מוֹדֶה אֲנִי','moh-deh ah-nee','Modeh Ani','🌅'],['שְׁמַע יִשְׂרָאֵל','sh\'mah yis-rA-El','Shema Yisrael','✨'],['בָּרוּךְ אַתָּה','bA-rooch ah-tA','Baruch Atah','🙌'],
+ ['מֶלֶךְ הָעוֹלָם','meh-lech hA-oh-lAm','King of the world','👑'],['שַׁבָּת שָׁלוֹם','shah-bAS shA-lohm','Shabbat Shalom','🕯️'],['מַה נִּשְׁתַּנָּה','mah neesh-tah-nA','Mah Nishtanah','🍷'],
+ ['תּוֹרָה צִוָּה לָנוּ מֹשֶׁה','toh-rA tzee-vA lA-noo moh-sheh','Torah Tzivah','📜'],['שֶׁהַכֹּל נִהְיָה בִּדְבָרוֹ','sheh-hah-kohl neeh-yA beed-vA-roh','Shehakol','🥛'],
+ ['הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ','hah-moh-tzee leh-chem meen hA-A-retz','Hamotzi','🍞'],['בּוֹרֵא פְּרִי הָעֵץ','boh-rE p\'ree hA-Etz','Borei pri ha\'etz','🍎'],
+ ['בּוֹרֵא פְּרִי הָאֲדָמָה','boh-rE p\'ree hA-ah-dA-mA','Borei pri ha\'adamah','🥕'],['בּוֹרֵא פְּרִי הַגָּפֶן','boh-rE p\'ree hah-gA-fen','Borei pri hagafen','🍇'],
+ ['מוֹדִים אֲנַחְנוּ לָךְ','moh-deem ah-nahch-noo lAch','Modim','🙏'],['עֹשֶׂה שָׁלוֹם','oh-seh shA-lohm','Oseh Shalom','🕊️']]
 ];
 function sav(w){const a=[...w];let o='';for(let i=0;i<a.length;i++){let c=a[i];if(c==='ת'){let j=i+1,d=false;while(j<a.length&&/[֑-ׇ]/.test(a[j])){if(a[j]==='ּ')d=true;j++}if(!d)c='ס'}o+=c}return o}
-const WORDS=[];
 const KAW=()=>P.set.kam==='aw',SAV=()=>P.set.sav!==false;
-const tok=s=>s.replace(/A/g,KAW()?'aw':'ah').replace(/S/g,SAV()?'s':'t');
-function buildWords(){WORDS.length=0;W.forEach((w,i)=>WORDS.push({key:'w:'+i,word:1,disp:w[0],tr:tok(w[1]),en:tok(w[2]),pic:w[3],mean:w[4],he:SAV()?sav(w[0]):w[0],snd:'w'+i,isNew:true}))}
+const tok=s=>s.replace(/A/g,KAW()?'aw':'ah').replace(/E/g,'ay').replace(/S/g,SAV()?'s':'t');
+const enOf=s=>s.replace(/-/g,' ').replace(/'/g,'').replace(/ch/g,'kh');
+function mk(w,isNew){const tr=tok(w[1]);return {key:'w:'+w[0],word:1,disp:w[0],tr,en:enOf(tr),mean:w[2],pic:w[3],he:SAV()?sav(w[0]):w[0],snd:w[0],isNew,long:[...w[0]].length>14}}
 
 /* ---------- belts ---------- */
 const BELTS=[
-{id:'white',name:'White belt',c:'#f4f1ea',nv:['kamatz','patach'],tip:()=>KAW()?'Kamatz (a little T) says "aw". Patach (a line) says "ah".':'Kamatz (a little T) and patach (a line) both say "ah".'},
-{id:'yellow',name:'Yellow belt',c:'#f2c230',nv:['chirik','chirikY'],tip:'Chirik is one dot under the letter and says "ee". A yud after it stays quiet.'},
-{id:'orange',name:'Orange belt',c:'#ee7d22',nv:['segol','tzeirei','tzeireiY'],tip:'Segol (three dots) says "eh". Tzeirei (two dots side by side) says "ay". A yud after tzeirei stays quiet.'},
-{id:'green',name:'Green belt',c:'#3a9a4b',nv:['cholam','cholamV'],tip:'Cholam is a dot up top and says "oh". A vav with a dot on its head also says "oh".'},
-{id:'blue',name:'Blue belt',c:'#2d6cdf',nv:['kubutz','shuruk'],tip:'Kubutz (three slanted dots) and shuruk (a vav with a dot in its belly) say "oo".'},
-{id:'purple',name:'Purple belt',c:'#7b4bc4',nv:['sheva','chatafP','chatafS','chatafK'],tip:'Sheva (two dots stacked) at the start is a quick "eh". The chataf vowels are quick vowels that live under א ה ח ע.'},
-{id:'brown',name:'Brown belt',c:'#7a4a26',pairs:true,tip:()=>'Dot or no dot? בּ b, ב v. כּ k, כ ch. פּ p, פ f. תּ t, ת '+(SAV()?'s':'t (same sound)')+'. Shin dot on the right says sh, on the left says s.'},
-{id:'black',name:'Black belt',c:'#151515',words:true,tip:'Real words and siddur words. Read the whole word, then check.'}
+{id:'white',name:'White belt',c:'#f4f1ea',d:'Kamatz and patach, 2 letters',tip:()=>KAW()?'Kamatz (a little T) says "aw". Patach (a line) says "ah". Every word here has just two letters.':'Kamatz (a little T) and patach (a line) both say "ah". Every word here has just two letters.'},
+{id:'yellow',name:'Yellow belt',c:'#f2c230',d:'Add chirik',tip:'Chirik is one dot under the letter and says "ee". A yud after it stays quiet.'},
+{id:'orange',name:'Orange belt',c:'#ee7d22',d:'Add segol and tzeirei',tip:'Segol (three dots) says "eh". Tzeirei (two dots side by side) says "ay".'},
+{id:'green',name:'Green belt',c:'#3a9a4b',d:'Add cholam',tip:'Cholam is a dot up top and says "oh". A vav with a dot on its head also says "oh".'},
+{id:'blue',name:'Blue belt',c:'#2d6cdf',d:'Add kubutz and shuruk',tip:'Kubutz (three slanted dots) and shuruk (a vav with a dot in its belly) say "oo".'},
+{id:'purple',name:'Purple belt',c:'#7b4bc4',d:'Sheva and quick vowels',tip:'Sheva (two dots stacked) at the start of a word is a quick sound. In the middle it is usually quiet. Chataf vowels are quick vowels.'},
+{id:'brown',name:'Brown belt',c:'#7a4a26',d:'Long words',tip:()=>'Longer words with three and four parts. Watch the dots: בּ b, ב v. כּ k, כ ch. פּ p, פ f. תּ t, ת '+(SAV()?'s':'t')+'.'},
+{id:'black',name:'Black belt',c:'#151515',d:'Siddur and brachos',tip:'Words from the siddur and brachos. Read them slowly, one word at a time.'}
 ];
-const ALLV=BELTS.flatMap(b=>b.nv||[]);
-function ok(l,v){if(v.gutOnly&&!l.gut)return false;if(v.noGut&&l.gut)return false;if(l.id==='vav'&&v.id==='cholam')return false;return true}
-function syl(l,v,isNew){
-  let s=v.s;if(v.id==='kamatz'&&KAW())s='aw';
-  const soft=l.id==='sav'&&!SAV(),ls=soft?'t':l.snd,lt=soft?'t':l.tr,lh=soft?'ת':l.he,le=soft?'t':l.en;
-  const key=s==='aw'&&mode()==='he'&&le==='kh'?'o':s;
-  return {key:'s:'+l.id+':'+v.id,L:l.id,V:v.id,disp:l.ch+v.m+(v.t||''),snd:ls+'|'+key,isNew,
-    tr:v.id==='sheva'?(lt?lt+"'":"'"):(lt+TRV[s]),note:v.quick?'quick sound':'',
-    he:lh+HEV[s],vo:le!=='kh',en:!le?VO[s]:v.id==='sheva'?(le+'uh'):(le+TRV[s])};
-}
 let POOLS={};
-function rebuild(){POOLS={};recent=[];buildWords()}
+function rebuild(){POOLS={};recent=[]}
 function pool(i){
   if(POOLS[i])return POOLS[i];
-  const b=BELTS[i];let p=[];
-  if(b.words)p=WORDS;
-  else if(b.pairs){L.filter(l=>l.pair).forEach(l=>ALLV.forEach(id=>{const v=VI[id];if(ok(l,v))p.push(syl(l,v,true))}))}
-  else{const prev=BELTS.slice(0,i).flatMap(x=>x.nv||[]);
-    [...b.nv.map(id=>[id,true]),...prev.map(id=>[id,false])].forEach(([id,n])=>{const v=VI[id];L.forEach(l=>{if(ok(l,v))p.push(syl(l,v,n))})})}
+  const p=WB[i].map(w=>mk(w,true));
+  WB.slice(0,i).forEach(list=>list.forEach(w=>p.push(mk(w,false))));
   return POOLS[i]=p;
 }
 
 /* ---------- storage ---------- */
-function fresh(){return {v:1,stars:0,belts:{},items:{},set:{mode:'auto',voice:'',rate:.75,unlockAll:false}}}
-function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.v===1)return Object.assign(fresh(),d)}catch(e){}return fresh()}
+function fresh(){return {v:2,stars:0,belts:{},items:{},set:{mode:'auto',voice:'',rate:.75,unlockAll:false}}}
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.v===2)return Object.assign(fresh(),d);if(d&&d.v===1){const f=fresh();f.set=Object.assign(f.set,d.set);f.stars=d.stars||0;return f}}catch(e){}return fresh()}
 let P=load();
 if(!P.set.kam)P.set.kam='ah';if(P.set.sav===undefined)P.set.sav=true;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
@@ -231,7 +222,6 @@ function mode(){if(!hasTTS)return 'none';if(P.set.mode!=='auto')return P.set.mod
 function voiceFor(m){const list=m==='he'?heV():enV();return list.find(v=>v.voiceURI===P.set.voice)||list.find(v=>/en-US/.test(v.lang))||list[0]||null}
 function say(it){
   let m=mode();if(m==='none')return false;
-  if(it.vo&&m==='he'&&enV().length)m='en';
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(m==='he'?it.he:it.en);const v=voiceFor(m);if(v)u.voice=v;u.lang=v?v.lang:(m==='he'?'he-IL':'en-US');u.rate=P.set.rate;speechSynthesis.speak(u);return true}catch(e){return false}
 }
 let ac;
@@ -243,6 +233,7 @@ function burst(){const d=document.createElement('div');d.className='burst';d.inn
 /* ---------- picking ---------- */
 let recent=[];
 function pick(p){
+  const nw=p.filter(x=>x.isNew),od=p.filter(x=>!x.isNew);if(nw.length&&od.length)p=Math.random()<.75?nw:od;
   let tot=0;const ws=p.map(it=>{if(recent.includes(it.key))return 0;const st=P.items[it.key]||{a:0,m:0};let w=(it.isNew?2:1)*(1+3*st.m/(st.a+1));if(!st.a)w*=1.5;tot+=w;return w});
   let r=Math.random()*tot,it=p[p.length-1];
   if(tot===0)it=p[Math.floor(Math.random()*p.length)];else for(let i=0;i<p.length;i++){r-=ws[i];if(r<=0){it=p[i];break}}
@@ -251,7 +242,7 @@ function pick(p){
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function options(it,p){
   const out=[it],seen=new Set([it.snd]),take=(list,max)=>{let n=0;for(const x of shuffle(list)){if(out.length>=4||n>=max)return;if(!seen.has(x.snd)){out.push(x);seen.add(x.snd);n++}}};
-  if(!it.word){const l=LI[it.L];if(l.pair)take(p.filter(x=>x.L===l.pair&&x.V===it.V),1);take(p.filter(x=>x.L===it.L),2)}
+  const n=[...it.disp].length;take(p.slice().sort((a,b)=>Math.abs([...a.disp].length-n)-Math.abs([...b.disp].length-n)).slice(0,10),3);
   take(p,4);return shuffle(out);
 }
 
@@ -275,15 +266,10 @@ function home(){
   view='home';hero(true);if(hasTTS)speechSynthesis.cancel();
   const c=curBelt();
   app.innerHTML=`<div class="rack">${BELTS.map((b,i)=>{const bs=BS(b.id),u=unlocked(i);
-    return `<button class="beltrow ${i===c?'cur':''}" data-b="${i}" ${u?'':'disabled'}>${beltSvg(b.c,bs.earned)}<span><b>${b.name}</b><small>${b.words?'Words':b.pairs?'Dot or no dot':b.nv.map(id=>VI[id].n).join(', ')}</small>${u?segs(b.id):''}</span><span class="tag ${bs.earned?'done':''}">${bs.earned?'Earned':u?'Train':'Locked'}</span></button>`}).join('')}</div>`;
+    return `<button class="beltrow ${i===c?'cur':''}" data-b="${i}" ${u?'':'disabled'}>${beltSvg(b.c,bs.earned)}<span><b>${b.name}</b><small>${esc(b.d)}</small>${u?segs(b.id):''}</span><span class="tag ${bs.earned?'done':''}">${bs.earned?'Earned':u?'Train':'Locked'}</span></button>`}).join('')}</div>`;
   app.querySelectorAll('.beltrow').forEach(x=>x.onclick=()=>beltView(+x.dataset.b));
 }
-function examples(i){
-  const b=BELTS[i];
-  if(b.words)return WORDS.slice(0,3);
-  if(b.pairs)return ['bet','vet','kaf','chaf','shin','sin'].map(id=>syl(LI[id],VI.kamatz,true));
-  return b.nv.map(id=>syl(LI[VI[id].gutOnly?'alef':'bet'],VI[id],true));
-}
+function examples(i){return WB[i].slice(0,4).map(w=>mk(w,true))}
 function beltView(i){
   view='belt';hero(false);const b=BELTS[i],bs=BS(b.id),ex=examples(i),noAudio=mode()==='none';
   app.innerHTML=`<div class="row" style="gap:14px">${beltSvg(b.c,bs.earned)}<h2>${b.name}</h2></div>
@@ -306,7 +292,7 @@ function next(){if(G.res.length>=ROUND)return summary();G.m==='read'?qRead():qLi
 const EAR='<svg width="56" height="56" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
 function qRead(){
   const it=pick(G.p);
-  app.innerHTML=`${dots()}<div class="scroll"><div class="syl heb ${it.word?'word':''}" lang="he">${it.disp}</div><div class="reveal" id="rv"><span class="note">Say it out loud first.</span></div></div>
+  app.innerHTML=`${dots()}<div class="scroll"><div class="syl heb word ${it.long?'p':''}" lang="he">${it.disp}</div><div class="reveal" id="rv"><span class="note">Say it out loud first.</span></div></div>
   <div class="ctr" id="ct"><button class="big go" id="chk">${EAR.replace(/56/g,'30')} Check</button></div>`;
   $('#chk').onclick=()=>{
     say(it);
@@ -320,7 +306,7 @@ function qRead(){
 function qListen(){
   const it=pick(G.p),opts=options(it,G.p);let missed=false,done=false;
   app.innerHTML=`${dots()}<button class="ear" id="ear" aria-label="Hear the sound">${EAR}</button>
-  <div class="opts">${opts.map((o,k)=>`<button class="opt heb ${o.word?'w':''}" lang="he" data-k="${k}">${o.disp}</button>`).join('')}</div>`;
+  <div class="opts ${opts.some(o=>o.long)?'one':''}">${opts.map((o,k)=>`<button class="opt heb w ${o.long?'p':''}" lang="he" data-k="${k}">${o.disp}</button>`).join('')}</div>`;
   $('#ear').onclick=()=>say(it);setTimeout(()=>say(it),250);
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(done)return;const o=opts[+b.dataset.k];
@@ -329,16 +315,14 @@ function qListen(){
   });
 }
 function makeRow(){
-  const p=G.p;if(BELTS[G.bi].words)return shuffle(p).slice(0,4);
-  const a=pick(p.filter(x=>x.isNew));
-  let row=Math.random()<.5?p.filter(x=>x.L===a.L):p.filter(x=>x.V===a.V);
-  row=shuffle(row);const seen=new Set(),out=[];for(const x of row){if(!seen.has(x.disp)){seen.add(x.disp);out.push(x)}if(out.length===6)break}
-  if(out.length<4)for(const x of shuffle(p)){if(out.length>=6)break;if(!seen.has(x.disp)){seen.add(x.disp);out.push(x)}}
-  return out;
+  const p=G.p,fresh=p.filter(x=>x.isNew),old=p.filter(x=>!x.isNew),n=p.some(x=>x.long)?3:4;
+  const out=[];const add=x=>{if(x&&!out.includes(x))out.push(x)};
+  shuffle(fresh).slice(0,old.length?n-1:n).forEach(add);shuffle(old).forEach(x=>{if(out.length<n)add(x)});
+  return shuffle(out);
 }
 function chart(){
-  const row=makeRow(),miss=new Set(),w=!!row[0].word;let t0=0,tm=null,secs=0;
-  const grid=cls=>`<div class="chart ${w?'w':''} ${cls}" id="grid">${row.map((x,k)=>`<div class="cell" data-k="${k}"><span class="h heb" lang="he">${x.disp}</span></div>`).join('')}</div>`;
+  const row=makeRow(),miss=new Set(),w=true,one=row.some(x=>x.long);let t0=0,tm=null,secs=0;
+  const grid=cls=>`<div class="chart w ${one?'one':''} ${cls}" id="grid">${row.map((x,k)=>`<div class="cell" data-k="${k}"><span class="h heb" lang="he">${x.disp}</span></div>`).join('')}</div>`;
   app.innerHTML=`<h2 style="text-align:center">Speed row</h2><div class="timer" id="tm">0.0</div>${grid('hide')}<div class="ctr" id="ct"><button class="big go" id="go">Start</button></div><p class="note" id="hint">Read every one out loud, right to left. Tap Done when you finish.</p>`;
   $('#go').onclick=()=>{
     $('#grid').classList.remove('hide');t0=performance.now();
@@ -384,7 +368,7 @@ function settings(){
    <label for="md">Voice type</label><select id="md"><option value="auto">Automatic</option><option value="he">Hebrew voice</option><option value="en">English sound-out voice</option></select>
    <label for="vc">Which voice</label><select id="vc">${list.length?list.map(v=>`<option value="${esc(v.voiceURI)}" ${cv&&cv.voiceURI===v.voiceURI?'selected':''}>${esc(v.name)} (${esc(v.lang)})</option>`).join(''):'<option>None available</option>'}</select>
    <label for="rt">Speed: <span id="rv">${P.set.rate.toFixed(2)}</span></label><input type="range" id="rt" min="0.4" max="1.1" step="0.05" value="${P.set.rate}">
-   <div class="row" style="margin-top:12px"><button class="ghost" id="t1">Test בָּ</button><button class="ghost" id="t2">Test ת</button><button class="ghost" id="t3">Test שַׁבָּת</button></div></div>
+   <div class="row" style="margin-top:12px"><button class="ghost" id="t1">Test דָּג</button><button class="ghost" id="t2">Test בַּת</button><button class="ghost" id="t3">Test שַׁבָּת</button></div></div>
   <div class="card"><b>Pronunciation</b>
    <label for="kp">Kamatz (as in <span class="heb" lang="he">בָּ</span>)</label><select id="kp"><option value="ah">"ah" (Sephardi / Israeli)</option><option value="aw">"aw" (Ashkenazi)</option></select>
    <label for="sp">Tav without a dot ת</label><select id="sp"><option value="s">"s" (Ashkenazi sav)</option><option value="t">"t" (Israeli tav)</option></select>
@@ -399,7 +383,7 @@ function settings(){
   $('#sp').onchange=e=>{P.set.sav=e.target.value==='s';save();rebuild()};
   $('#vc').onchange=e=>{P.set.voice=e.target.value;save()};
   $('#rt').oninput=e=>{P.set.rate=+e.target.value;$('#rv').textContent=P.set.rate.toFixed(2);save()};
-  $('#t1').onclick=()=>say(syl(LI.bet,VI.kamatz));$('#t2').onclick=()=>say(syl(LI.sav,VI.kamatz));$('#t3').onclick=()=>say(WORDS[19]);
+  $('#t1').onclick=()=>say(mk(WB[0][0],true));$('#t2').onclick=()=>say(mk(WB[0][11],true));$('#t3').onclick=()=>say(mk(WB[6][17],true));
   $('#ua').onchange=e=>{P.set.unlockAll=e.target.checked;save()};
   let arm=false;$('#rs').onclick=e=>{if(!arm){arm=true;e.target.textContent='Tap again to erase everything';return}const s=P.set;P=fresh();P.set=s;save();$('#starN').textContent=0;home()};
   $('#bk').onclick=home;
