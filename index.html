@@ -116,7 +116,7 @@ select,input[type=range]{width:100%;font:inherit;font-size:16px;min-height:44px;
     <button class="gear" id="gear" aria-label="Grown-up settings"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg></button>
   </div>
   <div class="hero" id="hero">
-    <div><h1>Earn your belts in reading</h1><p>Each belt is a group of nekudos. Get 18 of the last 20 right to earn it.</p><p style="font-size:13px;opacity:.75">Version 4</p></div>
+    <div><h1>Earn your belts in reading</h1><p>Each belt is a group of nekudos. Get 18 of the last 20 right to earn it.</p><p style="font-size:13px;opacity:.75">Version 5</p></div>
     <div class="big heb" lang="he" aria-hidden="true">קְרִיאָה</div>
   </div>
 </header>
@@ -145,31 +145,31 @@ const LI=Object.fromEntries(L.map(x=>[x.id,x]));
 const V=[
 {id:'kamatz',m:'ָ',s:'a',n:'Kamatz'},{id:'patach',m:'ַ',s:'a',n:'Patach'},
 {id:'chirik',m:'ִ',s:'i',n:'Chirik'},{id:'chirikY',m:'ִ',t:'י',s:'i',n:'Chirik + yud'},
-{id:'segol',m:'ֶ',s:'e',n:'Segol'},{id:'tzeirei',m:'ֵ',s:'e',n:'Tzeirei'},{id:'tzeireiY',m:'ֵ',t:'י',s:'e',n:'Tzeirei + yud'},
+{id:'segol',m:'ֶ',s:'e',n:'Segol'},{id:'tzeirei',m:'ֵ',s:'ei',n:'Tzeirei'},{id:'tzeireiY',m:'ֵ',t:'י',s:'ei',n:'Tzeirei + yud'},
 {id:'cholam',m:'ֹ',s:'o',n:'Cholam'},{id:'cholamV',m:'',t:'וֹ',s:'o',n:'Cholam male'},
 {id:'kubutz',m:'ֻ',s:'u',n:'Kubutz'},{id:'shuruk',m:'',t:'וּ',s:'u',n:'Shuruk'},
 {id:'sheva',m:'ְ',s:'e',n:'Sheva',quick:1,noGut:1},
 {id:'chatafP',m:'ֲ',s:'a',n:'Chataf patach',quick:1,gutOnly:1},{id:'chatafS',m:'ֱ',s:'e',n:'Chataf segol',quick:1,gutOnly:1},{id:'chatafK',m:'ֳ',s:'o',n:'Chataf kamatz',quick:1,gutOnly:1}
 ];
 const VI=Object.fromEntries(V.map(x=>[x.id,x]));
-const TRV={a:'ah',aw:'aw',i:'ee',e:'eh',o:'oh',u:'oo'};
-const VO={a:'ah',aw:'aw',i:'e',e:'eh',o:'oh',u:'ooh'};
-const HEV={aw:'וֹ',a:'ָה',i:'ִי',e:'ֶה',o:'וֹ',u:'וּ'};
+const TRV={ei:'ay',a:'ah',aw:'aw',i:'ee',e:'eh',o:'oh',u:'oo'};
+const VO={ei:'ay',a:'ah',aw:'aw',i:'e',e:'eh',o:'oh',u:'ooh'};
+const HEV={ei:'ֵי',aw:'וֹ',a:'ָא',i:'ִי',e:'ֶא',o:'וֹ',u:'וּ'};
 
 /* ---------- words (Black belt) ---------- */
 const W=[
 ['שָׁלוֹם','shA-lohm','shA lome','👋','hello, peace'],['כֶּלֶב','keh-lev','keh lev','🐕','dog'],['דָּג','dAg','dAg','🐟','fish'],
-['יָד','yAd','yAd','✋','hand'],['סֵפֶר','seh-fer','seh fair','📖','book'],['בַּיִת','bah-yiS','bah yiS','🏠','house'],
+['יָד','yAd','yAd','✋','hand'],['סֵפֶר','say-fer','say fair','📖','book'],['בַּיִת','bah-yiS','bah yiS','🏠','house'],
 ['יֶלֶד','yeh-led','yeh led','👦','boy'],['אַבָּא','ah-bA','ah bA','👨','Abba'],['אִמָּא','ee-mA','ee mA','👩','Ima'],
 ['מַיִם','mah-yim','mah yeem','💧','water'],['לֶחֶם','leh-chem','leh khem','🍞','bread'],['שֶׁמֶשׁ','sheh-mesh','sheh mesh','☀️','sun'],
-['סוּס','soos','soose','🐴','horse'],['עֵץ','etz','ets','🌳','tree'],['פֶּרַח','peh-rach','peh rahkh','🌸','flower'],
+['סוּס','soos','soose','🐴','horse'],['עֵץ','aytz','ayts','🌳','tree'],['פֶּרַח','peh-rach','peh rahkh','🌸','flower'],
 ['חָלָב','chA-lAv','khA lAv','🥛','milk'],['גָּמָל','gA-mAl','gA mAl','🐫','camel'],['אֲרִי','ah-ree','ah ree','🦁','lion'],
-['כּוֹכָב','koh-chAv','koh khAv','⭐','star'],['שַׁבָּת','shah-bAS','shah bAS','🍷','Shabbos'],['נֵר','nehr','nair','🕯️','candle'],
+['כּוֹכָב','koh-chAv','koh khAv','⭐','star'],['שַׁבָּת','shah-bAS','shah bAS','🍷','Shabbos'],['נֵר','nayr','nair','🕯️','candle'],
 ['תּוֹרָה','toh-rA','toe rA','📜','Torah'],['בְּרָכָה','b\'rA-chA','brA khA','🙏','bracha'],['סֻכָּה','soo-kA','soo kA','🛖','sukkah'],
-['מְנוֹרָה','m\'noh-rA','mnoh rA','🕎','menorah'],['כִּסֵּא','kee-seh','kee seh','🪑','chair'],['עוּגָה','oo-gA','oo gA','🎂','cake'],
+['מְנוֹרָה','m\'noh-rA','mnoh rA','🕎','menorah'],['כִּסֵּא','kee-say','kee say','🪑','chair'],['עוּגָה','oo-gA','oo gA','🎂','cake'],
 ['דֻּבִּי','doo-bee','doo bee','🧸','teddy bear'],['רֶגֶל','reh-gel','reh gell','🦶','foot'],['אֹזֶן','oh-zen','oh zen','👂','ear'],
 ['פִּיל','peel','peel','🐘','elephant'],['דְּבוֹרָה','d\'voh-rA','dvoh rA','🐝','bee'],['גֶּשֶׁם','geh-shem','geh shem','🌧️','rain'],
-['מוֹדֶה אֲנִי','moh-deh ah-nee','moh deh ah nee','🌅','Modeh Ani'],['שְׁמַע יִשְׂרָאֵל','sh\'mah yis-rA-el','shmah yiss rA ell','✨','Shema Yisrael'],['בָּרוּךְ אַתָּה','bA-rooch ah-tA','bA rookh ah tA','🙌','Baruch Atah']
+['מוֹדֶה אֲנִי','moh-deh ah-nee','moh deh ah nee','🌅','Modeh Ani'],['שְׁמַע יִשְׂרָאֵל','sh\'mah yis-rA-ayl','shmah yiss rA ale','✨','Shema Yisrael'],['בָּרוּךְ אַתָּה','bA-rooch ah-tA','bA rookh ah tA','🙌','Baruch Atah']
 ];
 function sav(w){const a=[...w];let o='';for(let i=0;i<a.length;i++){let c=a[i];if(c==='ת'){let j=i+1,d=false;while(j<a.length&&/[֑-ׇ]/.test(a[j])){if(a[j]==='ּ')d=true;j++}if(!d)c='ס'}o+=c}return o}
 const WORDS=[];
@@ -181,7 +181,7 @@ function buildWords(){WORDS.length=0;W.forEach((w,i)=>WORDS.push({key:'w:'+i,wor
 const BELTS=[
 {id:'white',name:'White belt',c:'#f4f1ea',nv:['kamatz','patach'],tip:()=>KAW()?'Kamatz (a little T) says "aw". Patach (a line) says "ah".':'Kamatz (a little T) and patach (a line) both say "ah".'},
 {id:'yellow',name:'Yellow belt',c:'#f2c230',nv:['chirik','chirikY'],tip:'Chirik is one dot under the letter and says "ee". A yud after it stays quiet.'},
-{id:'orange',name:'Orange belt',c:'#ee7d22',nv:['segol','tzeirei','tzeireiY'],tip:'Segol (three dots) and tzeirei (two dots side by side) say "eh". A yud after tzeirei stays quiet.'},
+{id:'orange',name:'Orange belt',c:'#ee7d22',nv:['segol','tzeirei','tzeireiY'],tip:'Segol (three dots) says "eh". Tzeirei (two dots side by side) says "ay". A yud after tzeirei stays quiet.'},
 {id:'green',name:'Green belt',c:'#3a9a4b',nv:['cholam','cholamV'],tip:'Cholam is a dot up top and says "oh". A vav with a dot on its head also says "oh".'},
 {id:'blue',name:'Blue belt',c:'#2d6cdf',nv:['kubutz','shuruk'],tip:'Kubutz (three slanted dots) and shuruk (a vav with a dot in its belly) say "oo".'},
 {id:'purple',name:'Purple belt',c:'#7b4bc4',nv:['sheva','chatafP','chatafS','chatafK'],tip:'Sheva (two dots stacked) at the start is a quick "eh". The chataf vowels are quick vowels that live under א ה ח ע.'},
