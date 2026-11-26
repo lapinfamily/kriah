@@ -67,7 +67,7 @@ h2{font-size:clamp(26px,5vw,34px);line-height:1.1;margin:4px 0 8px}
 .reveal{min-height:96px;display:grid;place-items:center}
 .tr{font-size:clamp(34px,8vw,48px);font-weight:700;color:var(--red2);letter-spacing:.02em}
 .tr small{display:block;font-size:16px;color:var(--soft);font-weight:500;letter-spacing:0}
-.pic{font-size:64px;line-height:1}
+.pic{font-size:64px;line-height:1}.pic.sm{font-size:clamp(40px,11vw,56px);margin-top:6px}.cell .pc,.ex .pc{font-size:28px;line-height:1.1;display:block}.opt .pc{font-size:30px;display:block;line-height:1.1}
 .big{min-height:64px;border-radius:18px;padding:12px 22px;font-size:21px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:10px}
 .go{background:var(--red);color:#fff8ec;box-shadow:0 5px 0 var(--red2)}
 .yes{background:var(--ok);color:#fff;flex:1}.no{background:var(--paper);border:2px solid var(--line);flex:1}
@@ -116,7 +116,7 @@ select,input[type=range]{width:100%;font:inherit;font-size:16px;min-height:44px;
     <button class="gear" id="gear" aria-label="Grown-up settings"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.3 7.3 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.3 7.3 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg></button>
   </div>
   <div class="hero" id="hero">
-    <div><h1>Earn your belts in reading</h1><p>Each belt adds new nekudos in real words. Get 18 of the last 20 right to earn it.</p><p style="font-size:13px;opacity:.75">Version 11 · words</p></div>
+    <div><h1>Earn your belts in reading</h1><p>Each belt adds new nekudos in real words. Get 18 of the last 20 right to earn it.</p><p style="font-size:13px;opacity:.75">Version 12</p></div>
     <div class="big heb" lang="he" aria-hidden="true">קְרִיאָה</div>
   </div>
 </header>
@@ -134,12 +134,12 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const WB=[
 /* white: kamatz + patach, 2 letters */
 [['דָּג','dAg','fish','🐟'],['יָד','yAd','hand','✋'],['גַּן','gahn','garden','🌷'],['חַם','chahm','hot','🔥'],['קַר','kahr','cold','🧊'],
- ['שָׁם','shAm','there','👉'],['מָה','mA','what?','❓'],['פַּח','pahch','trash can','🗑️'],['כַּף','kahf','spoon','🥄'],['גַּג','gahg','roof','🏠'],
- ['דַּף','dahf','page','📄'],['בַּת','bahS','daughter','👧'],['אַף','ahf','nose','👃'],['חַג','chahg','holiday','🎉'],['טַל','tahl','dew','💧'],
- ['רַךְ','rahch','soft','☁️'],['בָּא','bA','comes','🚶'],['צַד','tzahd','side','↔️']],
+ ['שָׁם','shAm','there',''],['מָה','mA','what?',''],['פַּח','pahch','trash can','🗑️'],['כַּף','kahf','spoon','🥄'],['גַּג','gahg','roof','🏠'],
+ ['דַּף','dahf','page','📄'],['בַּת','bahS','daughter','👧'],['אַף','ahf','nose','👃'],['חַג','chahg','holiday','🎉'],['טַל','tahl','dew',''],
+ ['רַךְ','rahch','soft',''],['בָּא','bA','comes',''],['צַד','tzahd','side','']],
 /* yellow: + chirik */
-[['מִי','mee','who?','🙋'],['פִּיל','peel','elephant','🐘'],['עִיר','eer','city','🏙️'],['שִׁיר','sheer','song','🎵'],['אִישׁ','eesh','man','👨'],
- ['תִּיק','teek','bag','🎒'],['קִיר','keer','wall','🧱'],['גִּיר','geer','chalk','🖍️'],['הִיא','hee','she','👩'],['מַיִם','mah-yim','water','💧'],
+[['מִי','mee','who?',''],['פִּיל','peel','elephant','🐘'],['עִיר','eer','city','🏙️'],['שִׁיר','sheer','song','🎵'],['אִישׁ','eesh','man','👨'],
+ ['תִּיק','teek','bag','🎒'],['קִיר','keer','wall','🧱'],['גִּיר','geer','chalk','🖍️'],['הִיא','hee','she',''],['מַיִם','mah-yim','water','💧'],
  ['בַּיִת','bah-yiS','house','🏠'],['יַיִן','yah-yin','wine','🍷'],['אִמָּא','ee-mA','Ima','👩'],['אַבָּא','ah-bA','Abba','👨'],['סַבָּא','sah-bA','Saba','👴'],
  ['כִּתָּה','kee-tA','class','🏫'],['חִטָּה','chee-tA','wheat','🌾']],
 /* orange: + segol, tzeirei */
@@ -148,8 +148,8 @@ const WB=[
  ['לֵב','lEv','heart','❤️'],['אֵשׁ','Esh','fire','🔥'],['תֵּה','tE','tea','🍵'],['מֶלֶךְ','meh-lech','king','👑'],['דֶּרֶךְ','deh-rech','road','🛣️'],
  ['כֶּסֶף','keh-sef','money','💰'],['חֶדֶר','cheh-der','room','🚪'],['פֶּרַח','peh-rach','flower','🌸'],['בֵּיצָה','bE-tzA','egg','🥚']],
 /* green: + cholam */
-[['שָׁלוֹם','shA-lohm','hello, peace','👋'],['יוֹם','yohm','day','📅'],['טוֹב','tohv','good','👍'],['קוֹל','kohl','voice','🗣️'],['חוֹל','chohl','sand','🏖️'],
- ['סוֹד','sohd','secret','🤫'],['אוֹר','ohr','light','💡'],['לֹא','loh','no','❌'],['עוֹף','ohf','chicken','🐔'],['כּוֹכָב','koh-chAv','star','⭐'],
+[['שָׁלוֹם','shA-lohm','hello, peace','👋'],['יוֹם','yohm','day','📅'],['טוֹב','tohv','good','👍'],['קוֹל','kohl','voice',''],['חוֹל','chohl','sand','🏖️'],
+ ['סוֹד','sohd','secret','🤫'],['אוֹר','ohr','light','💡'],['לֹא','loh','no',''],['עוֹף','ohf','chicken','🐔'],['כּוֹכָב','koh-chAv','star','⭐'],
  ['תּוֹרָה','toh-rA','Torah','📜'],['מוֹרֶה','moh-reh','teacher','🧑‍🏫'],['חֹרֶף','choh-ref','winter','❄️'],['אֹזֶן','oh-zen','ear','👂'],['בֹּקֶר','boh-ker','morning','🌅'],
  ['שׁוֹפָר','shoh-fAr','shofar','📯'],['גּוֹזָל','goh-zAl','baby bird','🐣'],['כּוֹבַע','koh-vah','hat','🎩']],
 /* blue: + kubutz, shuruk */
@@ -157,7 +157,7 @@ const WB=[
  ['רוּחַ','roo-ach','wind','🌬️'],['דֻּבִּי','doo-bee','teddy bear','🧸'],['עוּגָה','oo-gA','cake','🎂'],['סֻכָּה','soo-kA','sukkah','🛖'],['בּוּבָּה','boo-bA','doll','🪆'],
  ['סֻלָּם','soo-lAm','ladder','🪜'],['כַּדּוּר','kah-door','ball','⚽'],['תַּפּוּחַ','tah-poo-ach','apple','🍎'],['מוּסִיקָה','moo-see-kA','music','🎶']],
 /* purple: + sheva, chataf */
-[['אֲנִי','ah-nee','I, me','🙋'],['אֲרִי','ah-ree','lion','🦁'],['חֲלוֹם','chah-lohm','dream','💭'],['אֱמֶת','eh-meS','truth','✅'],['אֳנִיָּה','oh-nee-yA','ship','🚢'],
+[['אֲנִי','ah-nee','I, me',''],['אֲרִי','ah-ree','lion','🦁'],['חֲלוֹם','chah-lohm','dream',''],['אֱמֶת','eh-meS','truth',''],['אֳנִיָּה','oh-nee-yA','ship','🚢'],
  ['זְבוּב','z\'voov','fly','🪰'],['גְּבִינָה','g\'vee-nA','cheese','🧀'],['בְּרָכָה','b\'rA-chA','bracha','🙏'],['מְנוֹרָה','m\'noh-rA','menorah','🕎'],['דְּבוֹרָה','d\'voh-rA','bee','🐝'],
  ['יְלָדִים','y\'lA-deem','children','🧒'],['שְׁתַּיִם','sh\'tah-yim','two','2️⃣'],['עֲנָנִים','ah-nA-neem','clouds','☁️'],['אֲדָמָה','ah-dA-mA','earth','🌍'],
  ['חֲנֻכָּה','chah-noo-kA','Chanukah','🕯️'],['סַבְתָּא','sahv-tA','Savta','👵'],['יַלְדָּה','yahl-dA','girl','👧'],['פַּרְפַּר','pahr-pahr','butterfly','🦋'],['שֻׁלְחָן','shool-chAn','table','🍽️']],
@@ -168,18 +168,18 @@ const WB=[
  ['כִּסֵּא','kee-sE','chair','🪑'],['אוֹפַנַּיִם','oh-fah-nah-yim','bicycle','🚲'],['מְכוֹנִית','m\'choh-neeS','car','🚗'],['גְּלִידָה','g\'lee-dA','ice cream','🍦'],
  ['עִפָּרוֹן','ee-pA-rohn','pencil','✏️'],['שַׁבָּת','shah-bAS','Shabbos','🍷'],['בֵּית כְּנֶסֶת','bES k\'neh-seS','shul','🕍']],
 /* black: siddur and brachos */
-[['מוֹדֶה אֲנִי','moh-deh ah-nee','Modeh Ani','🌅'],['שְׁמַע יִשְׂרָאֵל','sh\'mah yis-rA-El','Shema Yisrael','✨'],['בָּרוּךְ אַתָּה','bA-rooch ah-tA','Baruch Atah','🙌'],
- ['מֶלֶךְ הָעוֹלָם','meh-lech hA-oh-lAm','King of the world','👑'],['שַׁבָּת שָׁלוֹם','shah-bAS shA-lohm','Shabbat Shalom','🕯️'],['מַה נִּשְׁתַּנָּה','mah neesh-tah-nA','Mah Nishtanah','🍷'],
- ['תּוֹרָה צִוָּה לָנוּ מֹשֶׁה','toh-rA tzee-vA lA-noo moh-sheh','Torah Tzivah','📜'],['שֶׁהַכֹּל נִהְיָה בִּדְבָרוֹ','sheh-hah-kohl neeh-yA beed-vA-roh','Shehakol','🥛'],
- ['הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ','hah-moh-tzee leh-chem meen hA-A-retz','Hamotzi','🍞'],['בּוֹרֵא פְּרִי הָעֵץ','boh-rE p\'ree hA-Etz','Borei pri ha\'etz','🍎'],
- ['בּוֹרֵא פְּרִי הָאֲדָמָה','boh-rE p\'ree hA-ah-dA-mA','Borei pri ha\'adamah','🥕'],['בּוֹרֵא פְּרִי הַגָּפֶן','boh-rE p\'ree hah-gA-fen','Borei pri hagafen','🍇'],
- ['מוֹדִים אֲנַחְנוּ לָךְ','moh-deem ah-nahch-noo lAch','Modim','🙏'],['עֹשֶׂה שָׁלוֹם','oh-seh shA-lohm','Oseh Shalom','🕊️']]
+[['מוֹדֶה אֲנִי','moh-deh ah-nee','Modeh Ani',''],['שְׁמַע יִשְׂרָאֵל','sh\'mah yis-rA-El','Shema Yisrael',''],['בָּרוּךְ אַתָּה','bA-rooch ah-tA','Baruch Atah',''],
+ ['מֶלֶךְ הָעוֹלָם','meh-lech hA-oh-lAm','King of the world',''],['שַׁבָּת שָׁלוֹם','shah-bAS shA-lohm','Shabbat Shalom',''],['מַה נִּשְׁתַּנָּה','mah neesh-tah-nA','Mah Nishtanah',''],
+ ['תּוֹרָה צִוָּה לָנוּ מֹשֶׁה','toh-rA tzee-vA lA-noo moh-sheh','Torah Tzivah',''],['שֶׁהַכֹּל נִהְיָה בִּדְבָרוֹ','sheh-hah-kohl neeh-yA beed-vA-roh','Shehakol',''],
+ ['הַמּוֹצִיא לֶחֶם מִן הָאָרֶץ','hah-moh-tzee leh-chem meen hA-A-retz','Hamotzi',''],['בּוֹרֵא פְּרִי הָעֵץ','boh-rE p\'ree hA-Etz','Borei pri ha\'etz',''],
+ ['בּוֹרֵא פְּרִי הָאֲדָמָה','boh-rE p\'ree hA-ah-dA-mA','Borei pri ha\'adamah',''],['בּוֹרֵא פְּרִי הַגָּפֶן','boh-rE p\'ree hah-gA-fen','Borei pri hagafen',''],
+ ['מוֹדִים אֲנַחְנוּ לָךְ','moh-deem ah-nahch-noo lAch','Modim',''],['עֹשֶׂה שָׁלוֹם','oh-seh shA-lohm','Oseh Shalom','']]
 ];
 function sav(w){const a=[...w];let o='';for(let i=0;i<a.length;i++){let c=a[i];if(c==='ת'){let j=i+1,d=false;while(j<a.length&&/[֑-ׇ]/.test(a[j])){if(a[j]==='ּ')d=true;j++}if(!d)c='ס'}o+=c}return o}
 const KAW=()=>P.set.kam==='aw',SAV=()=>P.set.sav!==false;
 const tok=s=>s.replace(/A/g,KAW()?'aw':'ah').replace(/E/g,'ay').replace(/S/g,SAV()?'s':'t');
 const enOf=s=>s.replace(/-/g,' ').replace(/'/g,'').replace(/ch/g,'kh');
-function mk(w,isNew){const tr=tok(w[1]);return {key:'w:'+w[0],word:1,disp:w[0],tr,en:enOf(tr),mean:w[2],pic:w[3],he:SAV()?sav(w[0]):w[0],snd:w[0],isNew,long:[...w[0]].length>14}}
+function mk(w,isNew){const tr=tok(w[1]);const en=enOf(tr);return {key:'w:'+w[0],word:1,disp:w[0],tr,en,enj:en.replace(/ /g,''),vo:/^[אע]/.test(w[0])&&!w[0].includes(' '),mean:w[2],pic:w[3],he:SAV()?sav(w[0]):w[0],snd:w[0],isNew,long:[...w[0]].length>14}}
 
 /* ---------- belts ---------- */
 const BELTS=[
@@ -202,10 +202,10 @@ function pool(i){
 }
 
 /* ---------- storage ---------- */
-function fresh(){return {v:2,stars:0,belts:{},items:{},set:{mode:'auto',voice:'',rate:.75,unlockAll:false}}}
+function fresh(){return {v:2,stars:0,belts:{},items:{},set:{mode:'auto',voice:'',rate:.75,unlockAll:false,pics:true}}}
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY));if(d&&d.v===2)return Object.assign(fresh(),d);if(d&&d.v===1){const f=fresh();f.set=Object.assign(f.set,d.set);f.stars=d.stars||0;return f}}catch(e){}return fresh()}
 let P=load();
-if(!P.set.kam)P.set.kam='ah';if(P.set.sav===undefined)P.set.sav=true;
+if(!P.set.kam)P.set.kam='ah';if(P.set.pics===undefined)P.set.pics=true;if(P.set.sav===undefined)P.set.sav=true;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
 function BS(id){return P.belts[id]||(P.belts[id]={hist:[],earned:false,best:null})}
 const unlocked=i=>i===0||P.set.unlockAll||BS(BELTS[i-1].id).earned;
@@ -222,6 +222,7 @@ function mode(){if(!hasTTS)return 'none';if(P.set.mode!=='auto')return P.set.mod
 function voiceFor(m){const list=m==='he'?heV():enV();return list.find(v=>v.voiceURI===P.set.voice)||list.find(v=>/en-US/.test(v.lang))||list[0]||null}
 function say(it){
   let m=mode();if(m==='none')return false;
+  if(it.vo&&m==='he'&&enV().length){m='en';it={he:it.he,en:it.enj}}
   try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(m==='he'?it.he:it.en);const v=voiceFor(m);if(v)u.voice=v;u.lang=v?v.lang:(m==='he'?'he-IL':'en-US');u.rate=P.set.rate;speechSynthesis.speak(u);return true}catch(e){return false}
 }
 let ac;
@@ -273,7 +274,7 @@ function examples(i){return WB[i].slice(0,4).map(w=>mk(w,true))}
 function beltView(i){
   view='belt';hero(false);const b=BELTS[i],bs=BS(b.id),ex=examples(i),noAudio=mode()==='none';
   app.innerHTML=`<div class="row" style="gap:14px">${beltSvg(b.c,bs.earned)}<h2>${b.name}</h2></div>
-  <div class="tip"><p>${esc(typeof b.tip==='function'?b.tip():b.tip)}</p><div class="ex">${ex.map((x,k)=>`<button data-k="${k}" aria-label="Hear ${esc(x.tr)}"><span class="h heb" lang="he">${x.disp}</span><span class="t">${esc(x.tr)}</span></button>`).join('')}</div></div>
+  <div class="tip"><p>${esc(typeof b.tip==='function'?b.tip():b.tip)}</p><div class="ex">${ex.map((x,k)=>`<button data-k="${k}" aria-label="Hear ${esc(x.tr)}">${P.set.pics&&x.pic?`<span class="pc">${x.pic}</span>`:''}<span class="h heb" lang="he">${x.disp}</span><span class="t">${esc(x.tr)}</span></button>`).join('')}</div></div>
   <div class="modes">
    <button class="mode" data-m="read"><b>Read and check</b><span>Read it out loud, then hear it and check yourself.</span></button>
    <button class="mode" data-m="listen" ${noAudio?'disabled':''}><b>Listen and tap</b><span>${noAudio?'Needs a voice on this device.':'Hear a sound, tap the one that matches.'}</span></button>
@@ -292,11 +293,11 @@ function next(){if(G.res.length>=ROUND)return summary();G.m==='read'?qRead():qLi
 const EAR='<svg width="56" height="56" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
 function qRead(){
   const it=pick(G.p);
-  app.innerHTML=`${dots()}<div class="scroll"><div class="syl heb word ${it.long?'p':''}" lang="he">${it.disp}</div><div class="reveal" id="rv"><span class="note">Say it out loud first.</span></div></div>
+  app.innerHTML=`${dots()}<div class="scroll">${P.set.pics&&it.pic?`<div class="pic sm" aria-hidden="true">${it.pic}</div>`:''}<div class="syl heb word ${it.long?'p':''}" lang="he">${it.disp}</div><div class="reveal" id="rv"><span class="note">Say it out loud first.</span></div></div>
   <div class="ctr" id="ct"><button class="big go" id="chk">${EAR.replace(/56/g,'30')} Check</button></div>`;
   $('#chk').onclick=()=>{
     say(it);
-    $('#rv').innerHTML=`<div>${it.pic?`<div class="pic">${it.pic}</div>`:''}<div class="tr">${esc(it.tr)}${it.note||it.mean?`<small>${esc(it.mean||it.note)}</small>`:''}</div></div>`;
+    $('#rv').innerHTML=`<div>${it.pic&&!P.set.pics?`<div class="pic">${it.pic}</div>`:''}<div class="tr">${esc(it.tr)}${it.note||it.mean?`<small>${esc(it.mean||it.note)}</small>`:''}</div></div>`;
     $('#ct').innerHTML=`<button class="big yes" id="y">I got it</button><button class="big no" id="n">Not yet</button><button class="ghost" id="again" style="width:100%">Hear it again</button>`;
     $('#again').onclick=()=>say(it);
     $('#y').onclick=()=>{record(it,true);G.res.push(1);ding();burst();setTimeout(next,700)};
@@ -310,7 +311,7 @@ function qListen(){
   $('#ear').onclick=()=>say(it);setTimeout(()=>say(it),250);
   app.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
     if(done)return;const o=opts[+b.dataset.k];
-    if(o.key===it.key){done=true;b.classList.add('right');if(!missed){record(it,true);G.res.push(1);burst()}ding();setTimeout(next,900)}
+    if(o.key===it.key){done=true;b.classList.add('right');if(it.pic)b.insertAdjacentHTML('afterbegin',`<span class="pc">${it.pic}</span>`);if(!missed){record(it,true);G.res.push(1);burst()}ding();setTimeout(next,900)}
     else{if(!missed){missed=true;record(it,false);G.res.push(0)}b.classList.remove('wrong');void b.offsetWidth;b.classList.add('wrong');bonk();setTimeout(()=>say(it),450)}
   });
 }
@@ -322,11 +323,11 @@ function makeRow(){
 }
 function chart(){
   const row=makeRow(),miss=new Set(),w=true,one=row.some(x=>x.long);let t0=0,tm=null,secs=0;
-  const grid=cls=>`<div class="chart w ${one?'one':''} ${cls}" id="grid">${row.map((x,k)=>`<div class="cell" data-k="${k}"><span class="h heb" lang="he">${x.disp}</span></div>`).join('')}</div>`;
+  const grid=cls=>`<div class="chart w ${one?'one':''} ${cls}" id="grid">${row.map((x,k)=>`<div class="cell" data-k="${k}">${P.set.pics&&x.pic?`<span class="pc" aria-hidden="true">${x.pic}</span>`:''}<span class="h heb" lang="he">${x.disp}</span></div>`).join('')}</div>`;
   app.innerHTML=`<h2 style="text-align:center">Speed row</h2><div class="timer" id="tm">0.0</div>${grid('hide')}<div class="ctr" id="ct"><button class="big go" id="go">Start</button></div><p class="note" id="hint">Read every one out loud, right to left. Tap Done when you finish.</p>`;
   $('#go').onclick=()=>{
     $('#grid').classList.remove('hide');t0=performance.now();
-    tm=setInterval(()=>{secs=(performance.now()-t0)/1000;$('#tm').textContent=secs.toFixed(1)},100);
+    tm=setInterval(()=>{const el=$('#tm');if(!el){clearInterval(tm);return}secs=(performance.now()-t0)/1000;el.textContent=secs.toFixed(1)},100);
     $('#ct').innerHTML='<button class="big go" id="dn">Done</button>';
     $('#dn').onclick=()=>{clearInterval(tm);secs=(performance.now()-t0)/1000;$('#tm').textContent=secs.toFixed(1)+'s';checkPhase()};
   };
@@ -373,7 +374,7 @@ function settings(){
    <label for="kp">Kamatz (as in <span class="heb" lang="he">בָּ</span>)</label><select id="kp"><option value="ah">"ah" (Sephardi / Israeli)</option><option value="aw">"aw" (Ashkenazi)</option></select>
    <label for="sp">Tav without a dot ת</label><select id="sp"><option value="s">"s" (Ashkenazi sav)</option><option value="t">"t" (Israeli tav)</option></select>
    <p class="note" style="text-align:start;margin-top:10px">Hebrew device voices speak Israeli Hebrew. With "aw" kamatz, a Hebrew voice says syllables like בָּ as "bo", and whole words keep their Israeli kamatz. The written sound-out and the English sound-out voice say "aw".</p></div>
-  <div class="card"><b>Belts</b><label class="toggle"><input type="checkbox" id="ua" ${P.set.unlockAll?'checked':''}> Unlock every belt</label>
+  <div class="card"><b>Belts</b><label class="toggle"><input type="checkbox" id="pc" ${P.set.pics?'checked':''}> Show pictures next to words (turn off to show them only after Check)</label><label class="toggle"><input type="checkbox" id="ua" ${P.set.unlockAll?'checked':''}> Unlock every belt</label>
    <div class="row" style="margin-top:10px"><button class="ghost" id="rs">Reset all progress</button></div></div>
   <button class="ghost" id="bk">Back to the dojo</button>`;
   $('#md').value=P.set.mode;
@@ -384,7 +385,7 @@ function settings(){
   $('#vc').onchange=e=>{P.set.voice=e.target.value;save()};
   $('#rt').oninput=e=>{P.set.rate=+e.target.value;$('#rv').textContent=P.set.rate.toFixed(2);save()};
   $('#t1').onclick=()=>say(mk(WB[0][0],true));$('#t2').onclick=()=>say(mk(WB[0][11],true));$('#t3').onclick=()=>say(mk(WB[6][17],true));
-  $('#ua').onchange=e=>{P.set.unlockAll=e.target.checked;save()};
+  $('#ua').onchange=e=>{P.set.unlockAll=e.target.checked;save()};$('#pc').onchange=e=>{P.set.pics=e.target.checked;save()};
   let arm=false;$('#rs').onclick=e=>{if(!arm){arm=true;e.target.textContent='Tap again to erase everything';return}const s=P.set;P=fresh();P.set=s;save();$('#starN').textContent=0;home()};
   $('#bk').onclick=home;
 }
